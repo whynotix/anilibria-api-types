@@ -1,0 +1,24 @@
+[project]
+name = "anilibria-api-types"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "whynotix",email = "semenbolotov414@gmail.com"}
+]
+license = {text = "The Unlicense"}
+readme = "README.md"
+requires-python = ">=3.13,<4.0.0"
+dependencies = [
+    "aiohttp (>=3.14.3,<4.0.0)",
+    "aiofiles (>=24.1.0,<26.0.0)",
+    "jsonref (>=1.1.0,<2.0.0)",
+    "pydantic (>=2.13.3,<3.0.0)",
+    "python-dotenv (>=1.2.3,<2.0.0)",
+    "pydantic-settings (>=2.15.0,<3.0.0)",
+    "anilibria-api-client (>=0.2.4,<0.3.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

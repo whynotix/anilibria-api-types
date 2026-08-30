@@ -1,0 +1,6 @@
+.venv
+.vscode
+__pycache__
+generator/codegen
+anilibria_api_types/temp
+.env
