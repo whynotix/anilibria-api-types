@@ -2,7 +2,8 @@
 
 [RU](https://github.com/whynotix/anilibria-api-types/tree/main/.github/README.ru_RU.md) | EN
 
-[![pypi](https://img.shields.io/pypi/v/anilibria-api-types.svg)](https://pypi.org/project/anilibria-api-types/)
+[![pypi](https://img.shields.io/pypi/v/anilibria-api-types.svg)](https://pypi.org/project/anilibria-api-types/) [![license](https://img.shields.io/github/license/whynotix/anilibria-api-types
+)](https://github.com/whynotix/anilibria-api-types/blob/main/LICENSE) [![Python](https://img.shields.io/pypi/pyversions/anilibria-api-types.svg)](https://pypi.org/project/anilibria-api-types/)
 
 Typed Pydantic-style stubs for the **AniLibria API** — method, enum, response, and error classes generated from the [OpenAPI schema](https://aniliberty.top/storage/api/docs/v1?aniliberty-api-v1-docs.json). The committed files under `anilibria_api_types/codegen/` are the deliverable, so running codegen and committing the diff is the work.
 

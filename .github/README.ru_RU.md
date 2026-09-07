@@ -3,7 +3,7 @@
 RU | [EN](https://github.com/whynotix/anilibria-api-types/tree/main/README.md)
 
 [![pypi](https://img.shields.io/pypi/v/anilibria-api-types.svg)](https://pypi.org/project/anilibria-api-types/) [![license](https://img.shields.io/github/license/whynotix/anilibria-api-types
-)](https://github.com/whynotix/anilibria-api-types/blob/main/LICENSE)
+)](https://github.com/whynotix/anilibria-api-types/blob/main/LICENSE) [![Python](https://img.shields.io/pypi/pyversions/anilibria-api-types.svg)](https://pypi.org/project/anilibria-api-types/)
 
 
 
