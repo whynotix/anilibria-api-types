@@ -1,4 +1,7 @@
-from anilibria_api_types.scripts import generate_responses, generate_methods, generate_errors, generate_enums
+from anilibria_api_types.scripts.generate_responses import main as generate_responses
+from anilibria_api_types.scripts.generate_methods import main as generate_methods
+from anilibria_api_types.scripts.generate_errors import main as generate_errors
+from anilibria_api_types.scripts.generate_enums import main as generate_enums
 from anilibria_api_types.validate_schema import download_schema
             
 async def main():
