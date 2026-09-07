@@ -1,0 +1,54 @@
+name: Weekly codegen refresh
+
+on:
+  schedule:
+    # Every Monday at 03:00 UTC
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: weekly-codegen-refresh
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Create .env
+        run: echo 'MAIN_FOLDER_NAME="anilibria_api_types"' > .env
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install .
+
+      - name: Regenerate codegen
+        run: python -m anilibria_api_types.main
+
+      - name: Show diff
+        run: git status --short
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v6
+        with:
+          add-paths: anilibria_api_types/codegen
+          commit-message: "chore: regenerate codegen"
+          branch: codegen/refresh
+          title: "chore: regenerate codegen"
+          body: |
+            Weekly automatic regeneration of the AniLibria codegen output.
+
+            If you're seeing this PR, the upstream OpenAPI schema changed and the
+            committed generated files under `anilibria_api_types/codegen/` are now
+            out of date.
+          delete-branch: true
