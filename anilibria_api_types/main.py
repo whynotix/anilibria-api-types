@@ -3,6 +3,7 @@ from anilibria_api_types.scripts.generate_methods import main as generate_method
 from anilibria_api_types.scripts.generate_errors import main as generate_errors
 from anilibria_api_types.scripts.generate_enums import main as generate_enums
 from anilibria_api_types.validate_schema import download_schema
+
             
 async def main():
     print("Starting download schema...")

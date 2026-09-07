@@ -4,3 +4,5 @@ __pycache__
 generator/codegen
 anilibria_api_types/temp
 .env
+*.egg-info
+dist
