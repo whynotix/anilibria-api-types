@@ -182,14 +182,14 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "anilibria-api-client"
-version = "0.2.4"
+version = "1.0.0rc1"
 description = "Python async API wrapper for AniLibria Swagger"
 optional = false
 python-versions = ">=3.13"
 groups = ["main"]
 files = [
-    {file = "anilibria_api_client-0.2.4-py3-none-any.whl", hash = "sha256:3dd44ef4775af6cbea7a3e53d4b417756deaf46e191cca16fee0c3d9ac0b3d6e"},
-    {file = "anilibria_api_client-0.2.4.tar.gz", hash = "sha256:63d84b1c4f10ee0dd76857cea87d3f861d7e6de1c3b6b0d2eb8af7ff6376fe6c"},
+    {file = "anilibria_api_client-1.0.0rc1-py3-none-any.whl", hash = "sha256:31d69e58bfb61d24cbdde9ae9537a79f7cb93fa7264b0109262d3de2f6d5b5a0"},
+    {file = "anilibria_api_client-1.0.0rc1.tar.gz", hash = "sha256:137c89d1c2a6d8eca72f101713d80bc4c47faba2451bd1d5b6235d23ace13466"},
 ]
 
 [package.dependencies]
@@ -1114,4 +1114,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4.0.0"
-content-hash = "fea06708c1f78922cda4ef1e455f0c7541b2042f2c912a9f7f1b5a6728ed0cc4"
+content-hash = "34a2360e9703fe551b5a5c46f20210ae99ab5b06d572dbc18e4023f9daa62662"

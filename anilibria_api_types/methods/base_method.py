@@ -8,6 +8,3 @@ if TYPE_CHECKING:
 class BaseMethod:
     def __init__(self, api: 'API') -> None:
         self.api = api
-
-    def test(self):
-        self.api.get
