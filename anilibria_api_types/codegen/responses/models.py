@@ -86,6 +86,8 @@ class AnimeReleasesV1Release(BaseModel):
 	name: AnimeReleasesV1ReleaseName | None = None
 	alias: str | None = None
 	season: AnimeReleasesV1ReleaseSeason | None = None
+	shikimori: AnimeReleasesV1ReleaseShikimori | None = None
+	mal: AnimeReleasesV1ReleaseMal | None = None
 	poster: ModelsComponentsImageWithOptimized | None = None
 	fresh_at: datetime.datetime | None = None
 	created_at: datetime.datetime | None = None
@@ -448,6 +450,7 @@ class AnimeReleasesRelease(AnimeReleasesV1Release):
 	episodes: list[AnimeReleasesV1ReleaseEpisode] | None = None
 	torrents: list[AnimeTorrentsV1Torrent] | None = None
 	sponsors: list[AnimeSponsorsV1Sponsor] | None = None
+	background_covers: list[ModelsComponentsImage] | None = None
 
 class AnimeReleasesReleaseMembers(RootModel):
 	root: list[AnimeReleasesV1ReleaseMember]
@@ -500,6 +503,18 @@ class AnimeReleasesV1ReleaseAgeRating(BaseModel):
 class AnimeReleasesV1ReleasePublishDay(BaseModel):
 	value: AnimeReleasesReleasePublishDay | None = None
 	description: str | None = None
+
+class AnimeReleasesV1ReleaseShikimori(BaseModel):
+	id: float | None = None
+	url: str | None = None
+	votes: float | None = None
+	rating: float | None = None
+
+class AnimeReleasesV1ReleaseMal(BaseModel):
+	id: float | None = None
+	url: str | None = None
+	votes: float | None = None
+	rating: float | None = None
 
 class AnimeReleasesV1ReleaseEpisodeSkip(BaseModel):
 	start: float | None = None
