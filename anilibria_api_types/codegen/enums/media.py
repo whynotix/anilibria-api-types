@@ -1,6 +1,6 @@
 # Auto-generated for enums in media category
-from enum import Enum
+from enum import StrEnum
 
 
-class MediaVideosVideoOriginType(str, Enum):
-	YOUTUBE_PLAYLIST = 'YOUTUBE_PLAYLIST'
+class MediaVideosVideoOriginType(StrEnum):
+    YOUTUBE_PLAYLIST = "YOUTUBE_PLAYLIST"

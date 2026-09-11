@@ -5,11 +5,12 @@ from anilibria_api_types.codegen.methods.media import MediaMethod
 from anilibria_api_types.codegen.methods.teams import TeamsMethod
 from anilibria_api_types.methods.base_method import BaseMethod
 
+
 __all__ = (
     "AccountsMethod",
     "AnimeMethod",
     "AppMethod",
+    "BaseMethod",
     "MediaMethod",
     "TeamsMethod",
-    "BaseMethod"
 )

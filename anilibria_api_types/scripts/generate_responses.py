@@ -16,13 +16,17 @@ def _clean_ident(value: str) -> str:
 
 
 def _pascal(ident: str) -> str:
-    return "".join(part[:1].upper() + part[1:] for part in ident.split("_") if part)
+    return "".join(
+        part[:1].upper() + part[1:] for part in ident.split("_") if part
+    )
 
 
 def _class_name(name: str) -> str:
     parts = name.split(".")[1:]
     i = 0
-    while i < len(parts) and (parts[i] == "api" or re.fullmatch(r"v\d+", parts[i])):
+    while i < len(parts) and (
+        parts[i] == "api" or re.fullmatch(r"v\d+", parts[i])
+    ):
         i += 1
     return "".join(part[:1].upper() + part[1:] for part in parts[i:])
 
@@ -33,13 +37,15 @@ def _category(name: str) -> str:
         return "commons"
     rest = parts[1:]
     i = 0
-    while i < len(rest) and (rest[i] == "api" or re.fullmatch(r"v\d+", rest[i])):
+    while i < len(rest) and (
+        rest[i] == "api" or re.fullmatch(r"v\d+", rest[i])
+    ):
         i += 1
     return rest[i] if i < len(rest) else "misc"
 
 
 class ResponseBuilder:
-    def __init__(self, schemas: dict, class_names: dict):
+    def __init__(self, schemas: dict, class_names: dict) -> None:
         self.schemas = schemas
         self.class_names = class_names
         self.enum_by_values = {}
@@ -47,12 +53,18 @@ class ResponseBuilder:
         self.origin = {}
 
         for name, schema in schemas.items():
-            if name.startswith("enums.") and isinstance(schema, dict) and "enum" in schema:
+            if (
+                name.startswith("enums.")
+                and isinstance(schema, dict)
+                and "enum" in schema
+            ):
                 enum_class = class_names[name]
                 self.enum_by_values[tuple(schema["enum"])] = enum_class
                 self.origin[enum_class] = ("enums", _category(name))
 
-    async def resolve_type(self, schema, parent_cls: str, field_hint: str) -> str:
+    async def resolve_type(
+        self, schema, parent_cls: str, field_hint: str
+    ) -> str:
         if not isinstance(schema, dict):
             return "Any"
 
@@ -72,7 +84,9 @@ class ResponseBuilder:
                 types = []
                 for sub in subs:
                     if isinstance(sub, dict):
-                        sub_type = await self.resolve_type(sub, parent_cls, field_hint)
+                        sub_type = await self.resolve_type(
+                            sub, parent_cls, field_hint
+                        )
                         if sub_type not in types:
                             types.append(sub_type)
                 if len(types) > 1:
@@ -80,7 +94,9 @@ class ResponseBuilder:
                 return types[0] if types else "Any"
 
         if "allOf" in schema and isinstance(schema.get("allOf"), list):
-            return await self._declare_composition(schema, parent_cls, field_hint)
+            return await self._declare_composition(
+                schema, parent_cls, field_hint
+            )
 
         schema_type = schema.get("type")
 
@@ -95,7 +111,9 @@ class ResponseBuilder:
 
         if schema_type == "object":
             if isinstance(schema.get("properties"), dict):
-                return await self._declare_object(schema, parent_cls, field_hint)
+                return await self._declare_object(
+                    schema, parent_cls, field_hint
+                )
             if isinstance(schema.get("additionalProperties"), dict):
                 inner = await self.resolve_type(
                     schema["additionalProperties"], parent_cls, field_hint
@@ -103,25 +121,35 @@ class ResponseBuilder:
                 return f"dict[str, {inner}]"
             return "dict"
 
-        return await get_type_map(schema=schema, enum_classes=self.enum_by_values)
+        return await get_type_map(
+            schema=schema, enum_classes=self.enum_by_values
+        )
 
-    async def _fill_object_fields(self, spec: dict, schema: dict, cls_name: str) -> None:
+    async def _fill_object_fields(
+        self, spec: dict, schema: dict, cls_name: str
+    ) -> None:
         seen = {field["name"] for field in spec["fields"]}
         for prop_name, prop_schema in (schema.get("properties") or {}).items():
             field_name = _clean_ident(prop_name)
             if not field_name or field_name in seen:
                 continue
             seen.add(field_name)
-            field_type = await self.resolve_type(prop_schema, cls_name, prop_name)
+            field_type = await self.resolve_type(
+                prop_schema, cls_name, prop_name
+            )
             spec["fields"].append({"name": field_name, "type": field_type})
 
-    async def _declare_object(self, schema: dict, parent_cls: str, field_hint: str) -> str:
+    async def _declare_object(
+        self, schema: dict, parent_cls: str, field_hint: str
+    ) -> str:
         name = parent_cls + _pascal(_clean_ident(field_hint))
         if name in self.classes:
             return name
         spec = {"name": name, "kind": "object", "bases": [], "fields": []}
         self.classes[name] = spec
-        self.origin[name] = self.origin.get(parent_cls, ("responses", self._cls_category(parent_cls)))
+        self.origin[name] = self.origin.get(
+            parent_cls, ("responses", self._cls_category(parent_cls))
+        )
         await self._fill_object_fields(spec, schema, name)
         return name
 
@@ -129,19 +157,25 @@ class ResponseBuilder:
         origin = self.origin.get(cls_name)
         return origin[1] if origin else "misc"
 
-    async def _declare_composition(self, schema: dict, parent_cls: str, field_hint: str) -> str:
+    async def _declare_composition(
+        self, schema: dict, parent_cls: str, field_hint: str
+    ) -> str:
         name = parent_cls + _pascal(_clean_ident(field_hint))
         if name in self.classes:
             return name
         spec = {"name": name, "kind": "object", "bases": [], "fields": []}
         self.classes[name] = spec
-        self.origin[name] = self.origin.get(parent_cls, ("responses", self._cls_category(parent_cls)))
+        self.origin[name] = self.origin.get(
+            parent_cls, ("responses", self._cls_category(parent_cls))
+        )
         for sub in schema.get("allOf") or []:
             if not isinstance(sub, dict):
                 continue
             if "$ref" in sub:
                 spec["bases"].append(
-                    self.class_names.get(sub["$ref"].rsplit("/", 1)[-1], "BaseModel")
+                    self.class_names.get(
+                        sub["$ref"].rsplit("/", 1)[-1], "BaseModel"
+                    )
                 )
             elif isinstance(sub.get("properties"), dict):
                 await self._fill_object_fields(spec, sub, name)
@@ -169,7 +203,9 @@ class ResponseBuilder:
 
         if "$ref" in schema:
             spec["kind"] = "root"
-            spec["root"] = self.class_names.get(schema["$ref"].rsplit("/", 1)[-1], "Any")
+            spec["root"] = self.class_names.get(
+                schema["$ref"].rsplit("/", 1)[-1], "Any"
+            )
             return spec
 
         if "allOf" in schema and isinstance(schema.get("allOf"), list):
@@ -181,7 +217,9 @@ class ResponseBuilder:
                     continue
                 if "$ref" in sub:
                     spec["bases"].append(
-                        self.class_names.get(sub["$ref"].rsplit("/", 1)[-1], "BaseModel")
+                        self.class_names.get(
+                            sub["$ref"].rsplit("/", 1)[-1], "BaseModel"
+                        )
                     )
                 elif isinstance(sub.get("properties"), dict):
                     await self._fill_object_fields(spec, sub, cls_name)
@@ -190,7 +228,9 @@ class ResponseBuilder:
             return spec
 
         schema_type = schema.get("type")
-        if schema_type == "object" and isinstance(schema.get("properties"), dict):
+        if schema_type == "object" and isinstance(
+            schema.get("properties"), dict
+        ):
             spec["kind"] = "object"
             spec["bases"] = []
             spec["fields"] = []
@@ -215,10 +255,7 @@ class ResponseBuilder:
 
 def _spec_block(spec: dict) -> str:
     if spec["kind"] == "root":
-        return (
-            f"class {spec['name']}(RootModel):\n"
-            f"\troot: {spec['root']}\n"
-        )
+        return f"class {spec['name']}(RootModel):\n\troot: {spec['root']}\n"
     bases = spec.get("bases") or ["BaseModel"]
     lines = [f"class {spec['name']}({', '.join(bases)}):"]
     if spec["fields"]:
@@ -252,7 +289,9 @@ def _order_specs(specs: list[dict]) -> list[dict]:
     return order
 
 
-def _module_imports(specs: list[dict], class_names: dict, origin: dict) -> list[str]:
+def _module_imports(
+    specs: list[dict], class_names: dict, origin: dict
+) -> list[str]:
     referenced = set()
     stdlib = set()
     typing_names = set()
@@ -265,8 +304,16 @@ def _module_imports(specs: list[dict], class_names: dict, origin: dict) -> list[
             type_strings.append(spec["root"])
 
     for type_str in type_strings:
-        stdlib |= {mod for mod in ("datetime", "uuid", "decimal") if mod + "." in type_str}
-        typing_names |= {name for name in ("Union", "Any") if re.search(rf"\b{name}\b", type_str)}
+        stdlib |= {
+            mod
+            for mod in ("datetime", "uuid", "decimal")
+            if mod + "." in type_str
+        }
+        typing_names |= {
+            name
+            for name in ("Union", "Any")
+            if re.search(rf"\b{name}\b", type_str)
+        }
         for cls in class_names.values():
             if re.search(rf"\b{re.escape(cls)}\b", type_str):
                 referenced.add(cls)
@@ -283,13 +330,17 @@ def _module_imports(specs: list[dict], class_names: dict, origin: dict) -> list[
         kind, category = origin[cls]
         by_location[(kind, category)].append(cls)
 
-    for (kind, category) in sorted(by_location):
+    for kind, category in sorted(by_location):
         names = ", ".join(sorted(by_location[(kind, category)]))
-        lines.append(f"from anilibria_api_types.codegen.{kind}.{category} import {names}")
+        lines.append(
+            f"from anilibria_api_types.codegen.{kind}.{category} import {names}"
+        )
     return lines
 
 
-def _module_text(category: str, specs: list[dict], class_names: dict, origin: dict) -> str:
+def _module_text(
+    category: str, specs: list[dict], class_names: dict, origin: dict
+) -> str:
     specs = _order_specs(specs)
     imports = _module_imports(specs, class_names, origin)
     lines = [
@@ -314,10 +365,7 @@ async def generate_responses():
         schema = json.load(f)
 
     schemas = schema.get("components", {}).get("schemas", {})
-    class_names = {
-        name: _class_name(name)
-        for name in schemas
-    }
+    class_names = {name: _class_name(name) for name in schemas}
 
     builder = ResponseBuilder(schemas, class_names)
     await builder.build_all()
@@ -336,4 +384,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())

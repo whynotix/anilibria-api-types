@@ -11,10 +11,7 @@ def _class_name(enum_name: str) -> str:
 
 
 def _member_name(value) -> str:
-    if isinstance(value, str):
-        raw = value.upper()
-    else:
-        raw = f"VALUE_{value}"
+    raw = value.upper() if isinstance(value, str) else f"VALUE_{value}"
     name = re.sub(r"[^A-Z0-9]", "_", raw).strip("_")
     if name and name[0].isdigit():
         name = "_" + name
@@ -30,9 +27,7 @@ def _base_type(values) -> str:
 
 
 def _enum_block(enum_name: str, values) -> str:
-    lines = [
-        f"class {_class_name(enum_name)}({_base_type(values)}):"
-    ]
+    lines = [f"class {_class_name(enum_name)}({_base_type(values)}):"]
     for value in values:
         repr_value = repr(value) if isinstance(value, str) else str(value)
         lines.append(f"\t{_member_name(value)} = {repr_value}")
@@ -66,8 +61,7 @@ async def generate_enums():
             blocks.append(_enum_block(name, values))
         content = (
             f"# Auto-generated for enums in {category} category\n"
-            "from enum import Enum\n\n\n"
-            + "\n\n".join(blocks)
+            "from enum import Enum\n\n\n" + "\n\n".join(blocks)
         )
         with open(file_path, "w", encoding="utf-8") as f:
             f.write(content)
@@ -79,4 +73,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())

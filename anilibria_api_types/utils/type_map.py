@@ -1,15 +1,14 @@
-from typing import Optional, Any
-from datetime import datetime, date
 import uuid
-from decimal import Decimal
+from datetime import date, datetime
+from typing import Any
 
 
 async def get_type_map(
-    openapi_type: Optional[str] = None,
-    openapi_format: Optional[str] = None,
-    example: Optional[Any] = None,
-    schema: Optional[dict] = None,
-    enum_classes: Optional[dict] = None,
+    openapi_type: str | None = None,
+    openapi_format: str | None = None,
+    example: Any | None = None,
+    schema: dict | None = None,
+    enum_classes: dict | None = None,
 ) -> str:
     """Определяет Python-тип на основе OpenAPI-схемы, формата и примера.
 
@@ -56,7 +55,7 @@ async def get_type_map(
     return _type_from_example(example)
 
 
-async def _type_from_schema(schema: dict, enum_classes: Optional[dict]) -> str:
+async def _type_from_schema(schema: dict, enum_classes: dict | None) -> str:
     """Определяет Python-тип по полной OpenAPI-схеме."""
     if "enum" in schema:
         enum_class = (enum_classes or {}).get(tuple(schema["enum"]))
@@ -70,7 +69,9 @@ async def _type_from_schema(schema: dict, enum_classes: Optional[dict]) -> str:
             types = []
             for sub in subs:
                 if isinstance(sub, dict):
-                    resolved = await get_type_map(schema=sub, enum_classes=enum_classes)
+                    resolved = await get_type_map(
+                        schema=sub, enum_classes=enum_classes
+                    )
                     if resolved != "Any" and resolved not in types:
                         types.append(resolved)
             if len(types) > 1:
@@ -83,7 +84,9 @@ async def _type_from_schema(schema: dict, enum_classes: Optional[dict]) -> str:
     if isinstance(subs, list):
         for sub in subs:
             if isinstance(sub, dict):
-                resolved = await get_type_map(schema=sub, enum_classes=enum_classes)
+                resolved = await get_type_map(
+                    schema=sub, enum_classes=enum_classes
+                )
                 if resolved and resolved != "Any":
                     return resolved
         return "Any"
@@ -102,7 +105,9 @@ async def _type_from_schema(schema: dict, enum_classes: Optional[dict]) -> str:
     if schema_type == "object":
         additional = schema.get("additionalProperties")
         if isinstance(additional, dict):
-            inner = await get_type_map(schema=additional, enum_classes=enum_classes)
+            inner = await get_type_map(
+                schema=additional, enum_classes=enum_classes
+            )
             return f"dict[str, {inner}]"
         return "dict"
 
@@ -128,31 +133,33 @@ def _type_from_example(example: Any) -> str:
     """Определяет Python-тип по значению примера"""
     if example is None:
         return "Any"
-    elif isinstance(example, str):
+    if isinstance(example, str):
         if _is_uuid(example):
             return "uuid.UUID"
-        elif _is_datetime(example):
+        if _is_datetime(example):
             return "datetime.datetime"
-        elif _is_date(example):
+        if _is_date(example):
             return "datetime.date"
-        else:
-            return "str"
-    elif isinstance(example, bool):
+        return "str"
+    if isinstance(example, bool):
         return "bool"
-    elif isinstance(example, int):
+    if isinstance(example, int):
         return "int"
-    elif isinstance(example, float):
+    if isinstance(example, float):
         return "float"
-    elif isinstance(example, dict):
+    if isinstance(example, dict):
         return "dict"
-    elif isinstance(example, list):
+    if isinstance(example, list):
         return "list"
-    elif isinstance(example, (datetime, date)):
-        return "datetime.datetime" if isinstance(example, datetime) else "datetime.date"
-    elif isinstance(example, uuid.UUID):
+    if isinstance(example, (datetime, date)):
+        return (
+            "datetime.datetime"
+            if isinstance(example, datetime)
+            else "datetime.date"
+        )
+    if isinstance(example, uuid.UUID):
         return "uuid.UUID"
-    else:
-        return f"{type(example).__name__}"
+    return f"{type(example).__name__}"
 
 
 def _type_from_format_only(openapi_format: str) -> str:
@@ -179,7 +186,7 @@ def _type_from_format_only(openapi_format: str) -> str:
     return format_mapping.get(openapi_format, "str")
 
 
-def _map_string_type(openapi_format: Optional[str]) -> str:
+def _map_string_type(openapi_format: str | None) -> str:
     """Маппинг строковых типов"""
     format_mapping = {
         "byte": "bytes",
@@ -194,28 +201,24 @@ def _map_string_type(openapi_format: Optional[str]) -> str:
         "ipv4": "str",
         "ipv6": "str",
         "regex": "str",
-        None: "str"
+        None: "str",
     }
     return format_mapping.get(openapi_format, "str")
 
 
-def _map_integer_type(openapi_format: Optional[str]) -> str:
+def _map_integer_type(openapi_format: str | None) -> str:
     """Маппинг целочисленных типов"""
-    format_mapping = {
-        "int32": "int",
-        "int64": "int",
-        None: "int"
-    }
+    format_mapping = {"int32": "int", "int64": "int", None: "int"}
     return format_mapping.get(openapi_format, "int")
 
 
-def _map_number_type(openapi_format: Optional[str]) -> str:
+def _map_number_type(openapi_format: str | None) -> str:
     """Маппинг числовых типов"""
     format_mapping = {
         "float": "float",
         "double": "float",
         "decimal": "decimal.Decimal",
-        None: "float"
+        None: "float",
     }
     return format_mapping.get(openapi_format, "float")
 
@@ -232,7 +235,7 @@ def _is_uuid(value: str) -> bool:
 def _is_datetime(value: str) -> bool:
     """Проверяет, является ли строка datetime"""
     try:
-        datetime.fromisoformat(value.replace('Z', '+00:00'))
+        datetime.fromisoformat(value)
         return True
     except:
         return False
