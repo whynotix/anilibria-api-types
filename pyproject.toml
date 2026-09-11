@@ -26,6 +26,12 @@ dependencies = [
 Homepage = "https://github.com/whynotix/anilibria-api-types"
 Issues = "https://github.com/whynotix/anilibria-api-types/issues"
 
+[tool.poetry.group.dev]
+optional = true
+
+[tool.poetry.group.dev.dependencies]
+ruff = "0.16.1"
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["anilibria_api_types*"]
