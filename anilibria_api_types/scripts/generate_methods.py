@@ -23,7 +23,9 @@ def _enum_class_name(enum_name: str) -> str:
 def _class_name(schema_name: str) -> str:
     parts = schema_name.split(".")[1:]
     i = 0
-    while i < len(parts) and (parts[i] == "api" or re.fullmatch(r"v\d+", parts[i])):
+    while i < len(parts) and (
+        parts[i] == "api" or re.fullmatch(r"v\d+", parts[i])
+    ):
         i += 1
     return "".join(part[:1].upper() + part[1:] for part in parts[i:])
 
@@ -42,7 +44,9 @@ def _response_return_type(details: dict) -> str | None:
     def schema_for(response: dict) -> dict | None:
         content = (response or {}).get("content") or {}
         for content_details in content.values():
-            if isinstance(content_details, dict) and isinstance(content_details.get("schema"), dict):
+            if isinstance(content_details, dict) and isinstance(
+                content_details.get("schema"), dict
+            ):
                 return content_details["schema"]
         return None
 
@@ -53,7 +57,7 @@ def _response_return_type(details: dict) -> str | None:
                 return _schema_to_type(schema) or None
 
     for code, response in responses.items():
-        if str(code) in ("default",) or str(code).startswith("2"):
+        if str(code) == "default" or str(code).startswith("2"):
             schema = schema_for(response)
             if schema is not None:
                 return _schema_to_type(schema) or None
@@ -86,18 +90,22 @@ async def _collect_params(details: dict, enum_classes: dict) -> list[dict]:
         if not name or name in seen:
             continue
         seen.add(name)
-        params.append({
-            "name": name,
-            "api_name": param["name"],
-            "type": await get_type_map(
-                schema=param.get("schema"),
-                example=param.get("example"),
-                enum_classes=enum_classes,
-            ),
-            "required": bool(param.get("required") or param.get("in") == "path"),
-            "origin": param.get("in", "query"),
-            "description": param.get("description"),
-        })
+        params.append(
+            {
+                "name": name,
+                "api_name": param["name"],
+                "type": await get_type_map(
+                    schema=param.get("schema"),
+                    example=param.get("example"),
+                    enum_classes=enum_classes,
+                ),
+                "required": bool(
+                    param.get("required") or param.get("in") == "path"
+                ),
+                "origin": param.get("in", "query"),
+                "description": param.get("description"),
+            }
+        )
 
     request_body = details.get("requestBody")
     if isinstance(request_body, dict):
@@ -105,22 +113,28 @@ async def _collect_params(details: dict, enum_classes: dict) -> list[dict]:
         for content_details in content.values():
             schema = (content_details or {}).get("schema") or {}
             required_props = set(schema.get("required") or [])
-            for prop_name, prop_schema in (schema.get("properties") or {}).items():
+            for prop_name, prop_schema in (
+                schema.get("properties") or {}
+            ).items():
                 name = _clean_ident(prop_name)
                 if not name or name in seen:
                     continue
                 seen.add(name)
-                params.append({
-                    "name": name,
-                    "api_name": prop_name,
-                    "type": await get_type_map(
-                        schema=prop_schema,
-                        enum_classes=enum_classes,
-                    ),
-                    "required": prop_name in required_props,
-                    "origin": "body",
-                    "description": prop_schema.get("description") if isinstance(prop_schema, dict) else None,
-                })
+                params.append(
+                    {
+                        "name": name,
+                        "api_name": prop_name,
+                        "type": await get_type_map(
+                            schema=prop_schema,
+                            enum_classes=enum_classes,
+                        ),
+                        "required": prop_name in required_props,
+                        "origin": "body",
+                        "description": prop_schema.get("description")
+                        if isinstance(prop_schema, dict)
+                        else None,
+                    }
+                )
 
     return params
 
@@ -131,7 +145,9 @@ def _ordered_params(params: list[dict]) -> list[dict]:
     return required + optional
 
 
-def _build_url(path: str, path_params: list[dict], enum_classes: set[str]) -> str:
+def _build_url(
+    path: str, path_params: list[dict], enum_classes: set[str]
+) -> str:
     if not path_params:
         return f'"{path}"'
 
@@ -193,12 +209,18 @@ def _method_body(
             f'"{p["api_name"]}": {_query_value(p["name"], p["type"], enum_classes)}'
             for p in query_params
         )
-        lines.append(f"{indent}params = {{k: v for k, v in {{{items}}}.items() if v is not None}}")
+        lines.append(
+            f"{indent}params = {{k: v for k, v in {{{items}}}.items() if v is not None}}"
+        )
     if body_params:
-        items = ", ".join(f'"{p["api_name"]}": {p["name"]}' for p in body_params)
+        items = ", ".join(
+            f'"{p["api_name"]}": {p["name"]}' for p in body_params
+        )
         lines.append(f"{indent}data = {{{items}}}")
 
-    url = _build_url(path, [p for p in params if p["origin"] == "path"], enum_classes)
+    url = _build_url(
+        path, [p for p in params if p["origin"] == "path"], enum_classes
+    )
 
     if verb in ("get", "post", "delete"):
         fn = verb
@@ -240,7 +262,9 @@ def _method_code(
     name = method["name"]
     params = method["params"]
     ordered = _ordered_params(params)
-    annotation = f" -> {method['return_type']}" if method.get("return_type") else ""
+    annotation = (
+        f" -> {method['return_type']}" if method.get("return_type") else ""
+    )
     lines = [f"\tasync def {name}(", "\t\tself,"]
     for i, param in enumerate(ordered):
         decl = f"\t\t{param['name']}: {param['type']}"
@@ -253,7 +277,15 @@ def _method_code(
     if docstring:
         lines.append(docstring)
 
-    lines.extend(_method_body(method["verb"], method["path"], ordered, method.get("return_type"), enum_classes))
+    lines.extend(
+        _method_body(
+            method["verb"],
+            method["path"],
+            ordered,
+            method.get("return_type"),
+            enum_classes,
+        )
+    )
     return "\n".join(lines) + "\n"
 
 
@@ -266,7 +298,9 @@ def _method_name_from_path(path: str) -> str:
     return "_".join(cleaned) if cleaned else "get"
 
 
-def _category_imports(methods: list[dict], enum_by_class: dict, class_names: list[str]) -> list[str]:
+def _category_imports(
+    methods: list[dict], enum_by_class: dict, class_names: list[str]
+) -> list[str]:
     enum_references = defaultdict(set)
     response_references = set()
     stdlib = set()
@@ -277,8 +311,16 @@ def _category_imports(methods: list[dict], enum_by_class: dict, class_names: lis
         if method.get("return_type"):
             type_strings.append(method["return_type"])
         for type_str in type_strings:
-            stdlib |= {mod for mod in ("datetime", "uuid", "decimal") if mod + "." in type_str}
-            typing_names |= {name for name in ("Union", "Any") if re.search(rf"\b{name}\b", type_str)}
+            stdlib |= {
+                mod
+                for mod in ("datetime", "uuid", "decimal")
+                if mod + "." in type_str
+            }
+            typing_names |= {
+                name
+                for name in ("Union", "Any")
+                if re.search(rf"\b{name}\b", type_str)
+            }
             for cls in class_names:
                 if re.search(rf"\b{re.escape(cls)}\b", type_str):
                     if cls in enum_by_class:
@@ -291,14 +333,23 @@ def _category_imports(methods: list[dict], enum_by_class: dict, class_names: lis
         lines.append("from typing import " + ", ".join(sorted(typing_names)))
     for category in sorted(enum_references):
         names = ", ".join(sorted(enum_references[category]))
-        lines.append(f"from anilibria_api_types.codegen.enums.{category} import {names}")
+        lines.append(
+            f"from anilibria_api_types.codegen.enums.{category} import {names}"
+        )
     if response_references:
         names = ", ".join(sorted(response_references))
-        lines.append(f"from anilibria_api_types.codegen.responses.models import {names}")
+        lines.append(
+            f"from anilibria_api_types.codegen.responses.models import {names}"
+        )
     return lines
 
 
-def _category_file(category: str, methods: list[dict], enum_by_class: dict, class_names: list[str]) -> str:
+def _category_file(
+    category: str,
+    methods: list[dict],
+    enum_by_class: dict,
+    class_names: list[str],
+) -> str:
     category_imports = _category_imports(methods, enum_by_class, class_names)
     lines = [
         f"# Auto-generated for methods in {category} category",
@@ -308,11 +359,13 @@ def _category_file(category: str, methods: list[dict], enum_by_class: dict, clas
     lines.extend(category_imports)
     if category_imports:
         lines.append("")
-    lines.extend([
-        "from anilibria_api_types.methods.base_method import BaseMethod",
-        "",
-        f"class {category.capitalize()}Method(BaseMethod):",
-    ])
+    lines.extend(
+        [
+            "from anilibria_api_types.methods.base_method import BaseMethod",
+            "",
+            f"class {category.capitalize()}Method(BaseMethod):",
+        ]
+    )
     for method in methods:
         lines.append(_method_code(method, set(enum_by_class)).rstrip("\n"))
         lines.append("")
@@ -342,17 +395,21 @@ async def generate_methods():
             if not isinstance(details, dict):
                 continue
             raw_details = raw_paths.get(path, {}).get(verb, {})
-            operations.append({
-                "category": category,
-                "base_name": _method_name_from_path(path),
-                "verb": verb,
-                "path": path,
-                "summary": details.get("summary"),
-                "params": await _collect_params(details, enum_by_values),
-                "return_type": _response_return_type(raw_details),
-            })
+            operations.append(
+                {
+                    "category": category,
+                    "base_name": _method_name_from_path(path),
+                    "verb": verb,
+                    "path": path,
+                    "summary": details.get("summary"),
+                    "params": await _collect_params(details, enum_by_values),
+                    "return_type": _response_return_type(raw_details),
+                }
+            )
 
-    verb_counts = Counter((op["category"], op["base_name"]) for op in operations)
+    verb_counts = Counter(
+        (op["category"], op["base_name"]) for op in operations
+    )
 
     methods_by_category = defaultdict(list)
     for op in operations:
@@ -368,7 +425,9 @@ async def generate_methods():
     for category, methods in methods_by_category.items():
         methods.sort(key=lambda m: m["name"])
         with open(base_path / f"{category}.py", "w", encoding="utf-8") as f:
-            f.write(_category_file(category, methods, enum_by_class, class_names))
+            f.write(
+                _category_file(category, methods, enum_by_class, class_names)
+            )
 
 
 async def main():
@@ -377,4 +436,5 @@ async def main():
 
 if __name__ == "__main__":
     import asyncio
+
     asyncio.run(main())
