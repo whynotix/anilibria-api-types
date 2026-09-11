@@ -29,7 +29,7 @@ Issues = "https://github.com/whynotix/anilibria-api-types/issues"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["anilibria_api_types*"]
-exclude = ["dist*", "build*"] 
+exclude = ["dist*", "build*", "anilibria_api_types/codegen*"] 
 
 [tool.ruff]
 target-version = "py313"

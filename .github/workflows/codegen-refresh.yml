@@ -3,7 +3,7 @@ name: Weekly codegen refresh
 on:
   schedule:
     # Every Monday at 03:00 UTC
-    - cron: '0 3 * * 1'
+    - cron: "0 3 * * 1"
   workflow_dispatch:
 
 permissions:
@@ -22,7 +22,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.13'
+          python-version: "3.13"
 
       - name: Create .env
         run: echo 'MAIN_FOLDER_NAME="anilibria_api_types"' > .env
@@ -45,6 +45,7 @@ jobs:
           commit-message: "chore: regenerate codegen"
           branch: codegen/refresh
           title: "chore: regenerate codegen"
+          labels: automated-pr
           body: |
             Weekly automatic regeneration of the AniLibria codegen output.
 
