@@ -27,13 +27,24 @@ jobs:
       - name: Create .env
         run: echo 'MAIN_FOLDER_NAME="anilibria_api_types"' > .env
 
-      - name: Install package
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          python -m pip install .
+          poetry lock
+          poetry install --with dev
 
       - name: Regenerate codegen
-        run: python -m anilibria_api_types.main
+        run: poetry run python -m anilibria_api_types.main
+
+      - name: Apply Ruff to generated code
+        run: |
+          poetry run ruff check --fix --unsafe-fixes --exit-zero anilibria_api_types/codegen
+          poetry run ruff format anilibria_api_types/codegen || true
 
       - name: Show diff
         run: git status --short

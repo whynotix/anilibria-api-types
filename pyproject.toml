@@ -35,7 +35,7 @@ ruff = "0.16.1"
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["anilibria_api_types*"]
-exclude = ["dist*", "build*", "anilibria_api_types/codegen*"] 
+exclude = ["dist*", "build*"] 
 
 [tool.ruff]
 target-version = "py313"
