@@ -128,6 +128,7 @@ class AnimeReleasesV1Release(BaseModel):
     season: AnimeReleasesV1ReleaseSeason | None = None
     shikimori: AnimeReleasesV1ReleaseShikimori | None = None
     mal: AnimeReleasesV1ReleaseMal | None = None
+    rating: AnimeReleasesV1ReleaseRating | None = None
     poster: ModelsComponentsImageWithOptimized | None = None
     fresh_at: datetime.datetime | None = None
     created_at: datetime.datetime | None = None
@@ -536,6 +537,23 @@ class AnimeGenresReleases(BaseModel):
     meta: UtilsPaginationSchemesMeta | None = None
 
 
+class AnimeReleasesRandom(RootModel):
+    root: list[AnimeReleasesRandomItem]
+
+
+class AnimeReleasesRandomItem(AnimeReleasesV1Release):
+    genres: list[AnimeGenresV1Genre] | None = None
+    background_covers: list[ModelsComponentsImage] | None = None
+
+
+class AnimeReleasesRecommended(RootModel):
+    root: list[AnimeReleasesRecommendedItem]
+
+
+class AnimeReleasesRecommendedItem(AnimeReleasesV1Release):
+    genres: list[AnimeGenresV1Genre] | None = None
+
+
 class AnimeReleasesLatest(RootModel):
     root: list[AnimeReleasesLatestItem]
 
@@ -543,14 +561,6 @@ class AnimeReleasesLatest(RootModel):
 class AnimeReleasesLatestItem(AnimeReleasesV1Release):
     genres: list[AnimeGenresV1Genre] | None = None
     latest_episode: AnimeReleasesV1ReleaseEpisode | None = None
-
-
-class AnimeReleasesRandom(RootModel):
-    root: list[AnimeReleasesV1Release]
-
-
-class AnimeReleasesRecommended(RootModel):
-    root: list[AnimeReleasesV1Release]
 
 
 class AnimeReleasesList(BaseModel):
@@ -654,9 +664,20 @@ class AnimeReleasesV1ReleaseMal(BaseModel):
     rating: float | None = None
 
 
+class AnimeReleasesV1ReleaseRating(BaseModel):
+    average: float | None = None
+    votes: float | None = None
+    distribution: dict | None = None
+
+
 class AnimeReleasesV1ReleaseEpisodeSkip(BaseModel):
     start: float | None = None
     stop: float | None = None
+
+
+class AnimeReleasesV1ReleaseRatingOwn(BaseModel):
+    release_id: float | None = None
+    score: float | None = None
 
 
 class AnimeScheduleNow(BaseModel):

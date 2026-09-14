@@ -30,6 +30,7 @@ from anilibria_api_types.codegen.responses.models import (
     AnimeReleasesRelease,
     AnimeReleasesReleaseEpisodesTimecodes,
     AnimeReleasesReleaseMembers,
+    AnimeReleasesV1ReleaseRatingOwn,
     AnimeScheduleNow,
     AnimeScheduleWeek,
     AnimeTorrent,
@@ -636,6 +637,40 @@ class AnimeMethod(BaseMethod):
             "/anime/releases/recommended", params=params
         )
         return AnimeReleasesRecommended.model_validate(response)
+
+    async def releases_releaseid_rating_delete(
+        self, releaseid: int
+    ) -> AnimeReleasesV1ReleaseRatingOwn:
+        """
+        Снять оценку с релиза
+        :param releaseid: Идентификатор релиза
+        """
+        response = await self.api.delete(f"/anime/releases/{releaseid}/rating")
+        return AnimeReleasesV1ReleaseRatingOwn.model_validate(response)
+
+    async def releases_releaseid_rating_get(
+        self, releaseid: int
+    ) -> AnimeReleasesV1ReleaseRatingOwn:
+        """
+        Моя оценка релиза
+        :param releaseid: Идентификатор релиза
+        """
+        response = await self.api.get(f"/anime/releases/{releaseid}/rating")
+        return AnimeReleasesV1ReleaseRatingOwn.model_validate(response)
+
+    async def releases_releaseid_rating_post(
+        self, releaseid: int, score: int
+    ) -> AnimeReleasesV1ReleaseRatingOwn:
+        """
+        Поставить оценку релизу
+        :param releaseid: Идентификатор релиза
+        :param score: Оценка, от 1 до 10
+        """
+        data = {"score": score}
+        response = await self.api.post(
+            f"/anime/releases/{releaseid}/rating", json_data=data
+        )
+        return AnimeReleasesV1ReleaseRatingOwn.model_validate(response)
 
     async def schedule_now(
         self,
