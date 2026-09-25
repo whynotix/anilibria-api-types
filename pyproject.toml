@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "anilibria-api-types"
-version = "1.0.0rc2"
+version = "1.0.0rc3"
 description = ""
 authors = [
     {name = "whynotix",email = "semenbolotov414@gmail.com"}
@@ -19,7 +19,7 @@ dependencies = [
     "pydantic (>=2.13.3,<3.0.0)",
     "python-dotenv (>=1.2.3,<2.0.0)",
     "pydantic-settings (>=2.15.0,<3.0.0)",
-    "anilibria-api-client (>=1.0.0rc2)"
+    "anilibria-api-client (>=1.0.0rc3,<2.0.0)"
 ]
 
 [project.urls]
@@ -91,6 +91,9 @@ ignore = [
 
 [tool.ruff.lint.isort]
 lines-after-imports = 2
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel", "pydantic.RootModel"]
 
 [tool.ruff.lint.mccabe]
 max-complexity = 10
