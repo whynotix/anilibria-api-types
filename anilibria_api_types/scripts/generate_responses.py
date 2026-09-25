@@ -357,6 +357,10 @@ def _module_text(
     for spec in specs:
         lines.append(_spec_block(spec).rstrip("\n"))
         lines.append("")
+    lines.append("")
+    lines.append("# Resolve forward references (including recursive models)")
+    for spec in specs:
+        lines.append(f"{spec['name']}.model_rebuild()")
     return "\n".join(lines) + "\n"
 
 

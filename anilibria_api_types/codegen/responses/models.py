@@ -1,38 +1,32 @@
 # Auto-generated responses/models
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+import datetime
+import uuid
 
 from pydantic import BaseModel, RootModel
 
-
-if TYPE_CHECKING:
-    import datetime
-    import uuid
-
-    from anilibria_api_types.codegen.enums.accounts import (
-        AccountsUsersUserCollectionType,
-        AccountsUsersUserFavoriteFilterSorting,
-    )
-    from anilibria_api_types.codegen.enums.ads import AdsBannerPlacement
-    from anilibria_api_types.codegen.enums.anime import (
-        AnimeCatalogFilterProductionStatus,
-        AnimeCatalogFilterPublishStatus,
-        AnimeCatalogFilterSorting,
-        AnimeReleasesReleaseAgeRating,
-        AnimeReleasesReleaseMemberRole,
-        AnimeReleasesReleasePublishDay,
-        AnimeReleasesReleaseSeason,
-        AnimeReleasesReleaseType,
-        AnimeTorrentsTorrentCodec,
-        AnimeTorrentsTorrentColor,
-        AnimeTorrentsTorrentMemberRole,
-        AnimeTorrentsTorrentQuality,
-        AnimeTorrentsTorrentType,
-    )
-    from anilibria_api_types.codegen.enums.media import (
-        MediaVideosVideoOriginType,
-    )
+from anilibria_api_types.codegen.enums.accounts import (
+    AccountsUsersUserCollectionType,
+    AccountsUsersUserFavoriteFilterSorting,
+)
+from anilibria_api_types.codegen.enums.ads import AdsBannerPlacement
+from anilibria_api_types.codegen.enums.anime import (
+    AnimeCatalogFilterProductionStatus,
+    AnimeCatalogFilterPublishStatus,
+    AnimeCatalogFilterSorting,
+    AnimeReleasesReleaseAgeRating,
+    AnimeReleasesReleaseMemberRole,
+    AnimeReleasesReleasePublishDay,
+    AnimeReleasesReleaseSeason,
+    AnimeReleasesReleaseType,
+    AnimeTorrentsTorrentCodec,
+    AnimeTorrentsTorrentColor,
+    AnimeTorrentsTorrentMemberRole,
+    AnimeTorrentsTorrentQuality,
+    AnimeTorrentsTorrentType,
+)
+from anilibria_api_types.codegen.enums.media import MediaVideosVideoOriginType
 
 
 class HttpResponses422Content(BaseModel):
@@ -917,3 +911,160 @@ class TeamsV1Team(BaseModel):
     title: str | None = None
     sort_order: int | None = None
     description: str | None = None
+
+
+# Resolve forward references (including recursive models)
+HttpResponses422Content.model_rebuild()
+ModelsComponentsImage.model_rebuild()
+ModelsComponentsImageWithOptimized.model_rebuild()
+UtilsPaginationSchemesMeta.model_rebuild()
+UtilsPaginationSchemesMetaPagination.model_rebuild()
+UtilsPaginationSchemesMetaPaginationLinks.model_rebuild()
+AccountsOtpLogin.model_rebuild()
+AccountsOtpGet.model_rebuild()
+AccountsOtpV1Otp.model_rebuild()
+AccountsUsersMeCollectionsReferencesAgeRatings.model_rebuild()
+AccountsUsersMeCollectionsReferencesAgeRatingsItem.model_rebuild()
+AccountsUsersMeCollectionsReferencesGenres.model_rebuild()
+AccountsUsersMeCollectionsReferencesGenresItem.model_rebuild()
+AccountsUsersMeCollectionsReferencesTypes.model_rebuild()
+AccountsUsersMeCollectionsReferencesTypesItem.model_rebuild()
+AccountsUsersMeCollectionsReferencesYears.model_rebuild()
+AccountsUsersCollectionsReleases.model_rebuild()
+AnimeReleasesV1Release.model_rebuild()
+AccountsUsersCollectionsReleasesItem.model_rebuild()
+AccountsUsersMeFavoritesReferencesAgeRatings.model_rebuild()
+AccountsUsersMeFavoritesReferencesAgeRatingsItem.model_rebuild()
+AccountsUsersMeFavoritesReferencesGenres.model_rebuild()
+AccountsUsersMeFavoritesReferencesGenresItem.model_rebuild()
+AccountsUsersMeFavoritesReferencesSorting.model_rebuild()
+AccountsUsersMeFavoritesReferencesSortingItem.model_rebuild()
+AccountsUsersMeFavoritesReferencesTypes.model_rebuild()
+AccountsUsersMeFavoritesReferencesTypesItem.model_rebuild()
+AccountsUsersMeFavoritesReferencesYears.model_rebuild()
+AccountsUsersMeFavoritesReleases.model_rebuild()
+AccountsUsersMeFavoritesReleasesItem.model_rebuild()
+AccountsUsersMeViewsHistory.model_rebuild()
+AccountsUsersV1UserView.model_rebuild()
+AccountsUsersMeViewsHistoryItem.model_rebuild()
+AnimeReleasesV1ReleaseEpisode.model_rebuild()
+AccountsUsersMeViewsHistoryItemReleaseEpisode.model_rebuild()
+AccountsUsersAuthLogin.model_rebuild()
+AccountsUsersAuthSocialAuthenticate.model_rebuild()
+AccountsUsersAuthSocialLogin.model_rebuild()
+AccountsUsersAuthLogout.model_rebuild()
+AccountsUsersMeCollectionsDelete.model_rebuild()
+AccountsUsersMeCollectionsIds.model_rebuild()
+AccountsUsersMeCollectionsIdsItem.model_rebuild()
+AccountsUsersMeCollectionsUpdate.model_rebuild()
+AccountsUsersMeFavoritesDelete.model_rebuild()
+AccountsUsersMeFavoritesIdsItem.model_rebuild()
+AccountsUsersMeFavoritesIds.model_rebuild()
+AccountsUsersMeFavoritesUpdate.model_rebuild()
+AccountsUsersMeViewsTimecodesItem.model_rebuild()
+AccountsUsersMeViewsTimecodes.model_rebuild()
+UsersV1UserSession.model_rebuild()
+UsersV1UserSessionDevice.model_rebuild()
+UsersV1UserSessionBrowser.model_rebuild()
+UsersV1UserSessionLocation.model_rebuild()
+UsersV1User.model_rebuild()
+UsersV1UserTorrents.model_rebuild()
+AdsBannersV1Banner.model_rebuild()
+AdsVasts.model_rebuild()
+AdsVastsV1Vast.model_rebuild()
+AnimeCatalogReleases.model_rebuild()
+AnimeCatalogReleasesItem.model_rebuild()
+AnimeCatalogReferencesAgeRatings.model_rebuild()
+AnimeCatalogReferencesAgeRatingsItem.model_rebuild()
+AnimeCatalogReferencesGenres.model_rebuild()
+AnimeCatalogReferencesGenresItem.model_rebuild()
+AnimeCatalogReferencesProductionStatuses.model_rebuild()
+AnimeCatalogReferencesProductionStatusesItem.model_rebuild()
+AnimeCatalogReferencesPublishStatuses.model_rebuild()
+AnimeCatalogReferencesPublishStatusesItem.model_rebuild()
+AnimeCatalogReferencesSeasons.model_rebuild()
+AnimeCatalogReferencesSeasonsItem.model_rebuild()
+AnimeCatalogReferencesSorting.model_rebuild()
+AnimeCatalogReferencesSortingItem.model_rebuild()
+AnimeCatalogReferencesTypes.model_rebuild()
+AnimeCatalogReferencesTypesItem.model_rebuild()
+AnimeCatalogReferencesYears.model_rebuild()
+AnimeFranchises.model_rebuild()
+AnimeFranchisesV1Franchise.model_rebuild()
+AnimeFranchise.model_rebuild()
+AnimeFranchisesV1FranchiseRelease.model_rebuild()
+AnimeFranchiseItem.model_rebuild()
+AnimeFranchisesRandom.model_rebuild()
+AnimeFranchisesByRelease.model_rebuild()
+AnimeFranchisesByReleaseItem.model_rebuild()
+AnimeFranchisesByReleaseItemItem.model_rebuild()
+AnimeGenres.model_rebuild()
+AnimeGenresV1Genre.model_rebuild()
+AnimeGenresItem.model_rebuild()
+AnimeGenresList.model_rebuild()
+AnimeGenresReleases.model_rebuild()
+AnimeReleasesRandom.model_rebuild()
+AnimeReleasesRandomItem.model_rebuild()
+AnimeReleasesRecommended.model_rebuild()
+AnimeReleasesRecommendedItem.model_rebuild()
+AnimeReleasesLatest.model_rebuild()
+AnimeReleasesLatestItem.model_rebuild()
+AnimeReleasesList.model_rebuild()
+AnimeReleasesListItem.model_rebuild()
+AnimeReleasesRelease.model_rebuild()
+AnimeReleasesReleaseMembers.model_rebuild()
+AnimeReleasesReleaseEpisodesTimecodes.model_rebuild()
+AnimeReleasesEpisode.model_rebuild()
+AnimeReleasesEpisodeRelease.model_rebuild()
+AnimeReleasesEpisodeTimecode.model_rebuild()
+AnimeReleasesV1ReleaseMemberRole.model_rebuild()
+AnimeReleasesV1ReleaseMember.model_rebuild()
+AnimeReleasesV1ReleaseMemberUser.model_rebuild()
+AnimeReleasesV1ReleaseType.model_rebuild()
+AnimeReleasesV1ReleaseName.model_rebuild()
+AnimeReleasesV1ReleaseSeason.model_rebuild()
+AnimeReleasesV1ReleaseAgeRating.model_rebuild()
+AnimeReleasesV1ReleasePublishDay.model_rebuild()
+AnimeReleasesV1ReleaseShikimori.model_rebuild()
+AnimeReleasesV1ReleaseMal.model_rebuild()
+AnimeReleasesV1ReleaseRating.model_rebuild()
+AnimeReleasesV1ReleaseEpisodeSkip.model_rebuild()
+AnimeReleasesV1ReleaseRatingOwn.model_rebuild()
+AnimeScheduleNow.model_rebuild()
+AnimeScheduleWeek.model_rebuild()
+AnimeScheduleV1ReleaseInSchedule.model_rebuild()
+AnimeSponsorsV1Sponsor.model_rebuild()
+AnimeTorrents.model_rebuild()
+AnimeTorrentsV1Torrent.model_rebuild()
+AnimeTorrentsItem.model_rebuild()
+AnimeTorrentsV1TorrentMember.model_rebuild()
+AnimeTorrentsItemItem.model_rebuild()
+AnimeTorrent.model_rebuild()
+AnimeTorrentItem.model_rebuild()
+AnimeTorrentsReleaseTorrents.model_rebuild()
+AnimeTorrentsReleaseTorrentsItem.model_rebuild()
+AnimeTorrentsReleaseTorrentsItemItem.model_rebuild()
+AnimeTorrentsV1TorrentMemberRole.model_rebuild()
+AnimeTorrentsV1TorrentMemberUser.model_rebuild()
+AnimeTorrentsV1TorrentType.model_rebuild()
+AnimeTorrentsV1TorrentQuality.model_rebuild()
+AnimeTorrentsV1TorrentCodec.model_rebuild()
+AnimeTorrentsV1TorrentColor.model_rebuild()
+AppSearchReleases.model_rebuild()
+AppStatus.model_rebuild()
+AppStatusRequest.model_rebuild()
+MediaPromotions.model_rebuild()
+MediaPromotionsV1Promotion.model_rebuild()
+MediaVideos.model_rebuild()
+MediaVideosV1VideoContent.model_rebuild()
+MediaVideosItem.model_rebuild()
+MediaVideosV1VideoOriginType.model_rebuild()
+MediaVideosV1VideoOrigin.model_rebuild()
+Teams.model_rebuild()
+TeamsRoles.model_rebuild()
+TeamsUsers.model_rebuild()
+TeamsV1TeamUser.model_rebuild()
+TeamsUsersItem.model_rebuild()
+TeamsV1TeamRole.model_rebuild()
+TeamsV1TeamUserAccount.model_rebuild()
+TeamsV1Team.model_rebuild()
