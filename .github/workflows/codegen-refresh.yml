@@ -19,24 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
         with:
-          python-version: "3.13"
+          ref: dev
 
       - name: Create .env
         run: echo 'MAIN_FOLDER_NAME="anilibria_api_types"' > .env
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Install dependencies
-        run: |
-          poetry lock
-          poetry install --with dev
+      - name: Setup Poetry and dependencies
+        uses: ./.github/actions/setup-poetry
 
       - name: Regenerate codegen
         run: poetry run python -m anilibria_api_types.main
@@ -55,6 +45,7 @@ jobs:
           add-paths: anilibria_api_types/codegen
           commit-message: "chore: regenerate codegen"
           branch: codegen/refresh
+          base: dev
           title: "chore: regenerate codegen"
           labels: automated-pr
           body: |

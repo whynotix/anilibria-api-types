@@ -6,3 +6,4 @@ anilibria_api_types/temp
 .env
 *.egg-info
 dist
+.ruff_cache

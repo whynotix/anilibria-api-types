@@ -2,13 +2,17 @@ name: Auto style with Ruff and create PR
 
 on:
   schedule:
-    - cron: "0 3 * * 1"
+    - cron: "0 4 * * 1"
   workflow_dispatch:
     inputs:
       branch_name:
         description: "Название ветки для авто-стиля"
         required: false
         default: "auto-style/ruff-fixes"
+
+concurrency:
+  group: auto-style-ruff
+  cancel-in-progress: false
 
 jobs:
   auto-style-and-pr:
@@ -22,29 +26,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          ref: dev
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.13"
-
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
-        with:
-          virtualenvs-create: true
-          virtualenvs-in-project: true
-
-      - name: Install dependencies
-        run: |
-          poetry lock
-          poetry install --with dev
+      - name: Setup Poetry and dependencies
+        uses: ./.github/actions/setup-poetry
 
       - name: Apply Ruff fixes
         id: ruff
         run: |
-          poetry run ruff check --fix --unsafe-fixes --exit-zero . 
+          poetry run ruff check --fix --unsafe-fixes --exit-zero .
           poetry run ruff format . || true
           poetry run ruff check --statistics --exit-zero .
 
@@ -61,12 +53,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.event.inputs.branch_name || 'auto-style/ruff-fixes' }}
-          base: main
+          base: dev
           title: "style: apply ruff auto-fixes"
           body: |
             ## Apply auto ruff-style
 
-            This pr created by auto action - apply-ruff-style
+            This PR is created automatically by the apply-ruff-style workflow.
 
             ### Changes:
             - `ruff check --fix`
