@@ -30,7 +30,7 @@ Issues = "https://github.com/whynotix/anilibria-api-types/issues"
 optional = true
 
 [tool.poetry.group.dev.dependencies]
-ruff = "0.16.1"
+ruff = "0.16.8"
 
 [tool.setuptools.packages.find]
 where = ["."]
