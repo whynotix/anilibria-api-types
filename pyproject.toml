@@ -17,7 +17,7 @@ dependencies = [
     "aiofiles (>=24.1.0,<26.0.0)",
     "jsonref (>=1.1.0,<2.0.0)",
     "pydantic (>=2.13.3,<3.0.0)",
-    "python-dotenv (>=1.2.3,<2.0.0)",
+    "python-dotenv (>=1.2.4,<2.0.0)",
     "pydantic-settings (>=2.15.0,<3.0.0)",
     "anilibria-api-client (>=1.0.0rc4,<2.0.0)"
 ]
