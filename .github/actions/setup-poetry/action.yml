@@ -40,7 +40,18 @@ runs:
         #key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
         #restore-keys: |
           #venv-${{ runner.os }}-${{ inputs.python-version }}-
-
+    - name: Load cached Poetry dependencies
+      uses: actions/cache@v4
+      id: cached-poetry-deps
+      with:
+        path: |
+          ~/.cache/pypoetry
+          ~/.cache/pip
+          .venv
+        key: poetry-${{ runner.os }}-py${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          poetry-${{ runner.os }}-py${{ inputs.python-version }}-
+    
     - name: Install dependencies
       run: |
         poetry lock
