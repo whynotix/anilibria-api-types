@@ -42,7 +42,6 @@ runs:
           venv-${{ runner.os }}-${{ inputs.python-version }}-
 
     - name: Install dependencies
-      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: |
         poetry lock
         poetry install ${{ inputs.install-extras }} ${{ inputs.install-dev == 'true' && '--with dev' || '' }}
