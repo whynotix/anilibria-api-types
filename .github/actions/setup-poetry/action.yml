@@ -8,9 +8,9 @@ inputs:
     default: "3.13"
 
   install-extras:
-    description: Install extra dependencies (set to 'true' for --all-extras, or pass specific flags)
+    description: Install extra dependencies (--all-extras or specific)
     required: false
-    default: "true"
+    default: ""
 
   install-dev:
     description: Install dev dependencies
@@ -20,6 +20,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+
     - name: Install Poetry
       uses: snok/install-poetry@v1
       with:
@@ -27,28 +32,18 @@ runs:
         virtualenvs-in-project: true
         installer-parallel: true
 
-    - name: Setup Python with Poetry Caching
-      uses: actions/setup-python@v5
+    - name: Load cached venv
+      uses: actions/cache@v4
+      id: cached-poetry-dependencies
       with:
-        python-version: ${{ inputs.python-version }}
-        cache: "poetry"
+        path: .venv
+        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+        restore-keys: |
+          venv-${{ runner.os }}-${{ inputs.python-version }}-
 
     - name: Install dependencies
-      shell: bash
+      if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
       run: |
-        ARGS=""
-
-        if [ "${{ inputs.install-extras }}" = "true" ]; then
-          ARGS="$ARGS --all-extras"
-        elif [ -n "${{ inputs.install-extras }}" ] && [ "${{ inputs.install-extras }}" != "false" ]; then
-          ARGS="$ARGS ${{ inputs.install-extras }}"
-        fi
-
-        if [ "${{ inputs.install-dev }}" = "true" ]; then
-          ARGS="$ARGS --with dev"
-        else
-          ARGS="$ARGS --without dev"
-        fi
-
-        poetry lock --check || poetry lock --no-update
-        poetry install $ARGS
+        poetry lock
+        poetry install ${{ inputs.install-extras }} ${{ inputs.install-dev == 'true' && '--with dev' || '' }}
+      shell: bash
