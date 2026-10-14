@@ -1,0 +1,50 @@
+name: PR
+
+on:
+  pull_request:
+    branches: [main, dev]
+    paths:
+      - "anilibria_api_types/**"
+      - "pyproject.toml"
+      - "poetry.lock"
+      - ".github/**"
+
+permissions:
+  contents: read
+
+jobs:
+  pre-pr-bump-lock-file:
+    name: Bump lock file
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Poetry and dependencies
+        uses: ./.github/actions/setup-poetry
+        with:
+          python-version: "3.13"
+          install-dev: "true"
+
+      - name: Update poetry.lock
+        run: |
+          poetry lock
+
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          if git diff --quiet poetry.lock; then
+            echo "No changes in poetry.lock"
+          else
+            git add poetry.lock
+            git commit -m "chore: update poetry.lock [skip ci]"
+            git push origin HEAD:${{ github.head_ref }}
+          fi
