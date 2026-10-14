@@ -8,9 +8,9 @@ inputs:
     default: "3.13"
 
   install-extras:
-    description: Install extra dependencies (--all-extras or specific)
+    description: Install extra dependencies (set to 'true' for --all-extras, or pass specific flags)
     required: false
-    default: ""
+    default: "true"
 
   install-dev:
     description: Install dev dependencies
@@ -20,11 +20,6 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ inputs.python-version }}
-
     - name: Install Poetry
       uses: snok/install-poetry@v1
       with:
@@ -32,28 +27,28 @@ runs:
         virtualenvs-in-project: true
         installer-parallel: true
 
-    # - name: Load cached venv
-      #uses: actions/cache@v4
-      #id: cached-poetry-dependencies
-      #with:
-        #path: .venv
-        #key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-        #restore-keys: |
-          #venv-${{ runner.os }}-${{ inputs.python-version }}-
-    - name: Load cached Poetry dependencies
-      uses: actions/cache@v4
-      id: cached-poetry-deps
+    - name: Setup Python with Poetry Caching
+      uses: actions/setup-python@v5
       with:
-        path: |
-          ~/.cache/pypoetry
-          ~/.cache/pip
-          .venv
-        key: poetry-${{ runner.os }}-py${{ inputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
-        restore-keys: |
-          poetry-${{ runner.os }}-py${{ inputs.python-version }}-
-    
+        python-version: ${{ inputs.python-version }}
+        cache: "poetry"
+
     - name: Install dependencies
-      run: |
-        poetry lock
-        poetry install ${{ inputs.install-extras }} ${{ inputs.install-dev == 'true' && '--with dev' || '' }}
       shell: bash
+      run: |
+        ARGS=""
+
+        if [ "${{ inputs.install-extras }}" = "true" ]; then
+          ARGS="$ARGS --all-extras"
+        elif [ -n "${{ inputs.install-extras }}" ] && [ "${{ inputs.install-extras }}" != "false" ]; then
+          ARGS="$ARGS ${{ inputs.install-extras }}"
+        fi
+
+        if [ "${{ inputs.install-dev }}" = "true" ]; then
+          ARGS="$ARGS --with dev"
+        else
+          ARGS="$ARGS --without dev"
+        fi
+
+        poetry lock --check || poetry lock --no-update
+        poetry install $ARGS
