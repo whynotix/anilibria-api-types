@@ -1,7 +1,7 @@
 # Auto-generated responses/models
 from __future__ import annotations
 
-import datetime
+import datetime as dt
 import uuid
 
 from pydantic import BaseModel, RootModel
@@ -73,7 +73,7 @@ class AccountsOtpV1Otp(BaseModel):
     code: str | None = None
     user_id: int | None = None
     device_id: str | None = None
-    expired_at: datetime.datetime | None = None
+    expired_at: dt.datetime | None = None
 
 
 class AccountsUsersMeCollectionsReferencesAgeRatings(RootModel):
@@ -124,9 +124,9 @@ class AnimeReleasesV1Release(BaseModel):
     mal: AnimeReleasesV1ReleaseMal | None = None
     rating: AnimeReleasesV1ReleaseRating | None = None
     poster: ModelsComponentsImageWithOptimized | None = None
-    fresh_at: datetime.datetime | None = None
-    created_at: datetime.datetime | None = None
-    updated_at: datetime.datetime | None = None
+    fresh_at: dt.datetime | None = None
+    created_at: dt.datetime | None = None
+    updated_at: dt.datetime | None = None
     is_ongoing: bool | None = None
     age_rating: AnimeReleasesV1ReleaseAgeRating | None = None
     publish_day: AnimeReleasesV1ReleasePublishDay | None = None
@@ -213,7 +213,7 @@ class AccountsUsersV1UserView(BaseModel):
     time: int | None = None
     user_id: int | None = None
     is_watched: bool | None = None
-    updated_at: datetime.datetime | None = None
+    updated_at: dt.datetime | None = None
     release_episode_id: str | None = None
 
 
@@ -236,7 +236,7 @@ class AnimeReleasesV1ReleaseEpisode(BaseModel):
     duration: float | None = None
     rutube_id: str | None = None
     youtube_id: str | None = None
-    updated_at: datetime.datetime | None = None
+    updated_at: dt.datetime | None = None
     sort_order: float | None = None
     release_id: float | None = None
     name_english: str | None = None
@@ -316,7 +316,7 @@ class UsersV1UserSession(BaseModel):
     ip_address: str | None = None
     user_agent: str | None = None
     is_current: bool | None = None
-    last_active: datetime.datetime | None = None
+    last_active: dt.datetime | None = None
 
 
 class UsersV1UserSessionDevice(BaseModel):
@@ -343,7 +343,7 @@ class UsersV1User(BaseModel):
     avatar: ModelsComponentsImageWithOptimized | None = None
     torrents: UsersV1UserTorrents | None = None
     is_banned: bool | None = None
-    created_at: datetime.datetime | None = None
+    created_at: dt.datetime | None = None
     is_with_ads: bool | None = None
 
 
@@ -719,10 +719,10 @@ class AnimeTorrentsV1Torrent(BaseModel):
     bitrate: int | None = None
     leechers: int | None = None
     sort_order: int | None = None
-    updated_at: datetime.datetime | None = None
+    updated_at: dt.datetime | None = None
     is_hardsub: bool | None = None
     description: str | None = None
-    created_at: datetime.datetime | None = None
+    created_at: dt.datetime | None = None
     completed_times: int | None = None
 
 
@@ -844,8 +844,8 @@ class MediaVideosV1VideoContent(BaseModel):
     image: ModelsComponentsImageWithOptimized | None = None
     comments: int | None = None
     video_id: str | None = None
-    created_at: datetime.datetime | None = None
-    updated_at: datetime.datetime | None = None
+    created_at: dt.datetime | None = None
+    updated_at: dt.datetime | None = None
     is_announce: bool | None = None
 
 

@@ -31,7 +31,7 @@ from anilibria_api_types.methods.base_method import BaseMethod
 
 
 if TYPE_CHECKING:
-    import datetime
+    import datetime as dt
 
     from anilibria_api_types.codegen.enums.accounts import (
         AccountsUsersUserCollectionType,
@@ -523,7 +523,7 @@ class AccountsMethod(BaseMethod):
         return await self.api.delete("/accounts/users/me/views/timecodes")
 
     async def users_me_views_timecodes_get(
-        self, since: datetime.datetime | None = None
+        self, since: dt.datetime | None = None
     ):
         """
         Таймкоды просмотренных эпизодов
