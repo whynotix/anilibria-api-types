@@ -137,6 +137,8 @@ class AnimeReleasesV1Release(BaseModel):
     is_in_production: bool | None = None
     is_blocked_by_geo: bool | None = None
     is_blocked_by_copyrights: bool | None = None
+    is_comments_closed: bool | None = None
+    comments_count: int | None = None
     added_in_users_favorites: float | None = None
     average_duration_of_episode: float | None = None
     added_in_planned_collection: float | None = None
@@ -343,6 +345,9 @@ class UsersV1User(BaseModel):
     avatar: ModelsComponentsImageWithOptimized | None = None
     torrents: UsersV1UserTorrents | None = None
     is_banned: bool | None = None
+    is_new: bool | None = None
+    is_admin: bool | None = None
+    permissions: list[str] | None = None
     created_at: dt.datetime | None = None
     is_with_ads: bool | None = None
 
