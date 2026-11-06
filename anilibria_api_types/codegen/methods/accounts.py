@@ -37,6 +37,8 @@ if TYPE_CHECKING:
         AccountsUsersUserCollectionType,
         AccountsUsersUserFavoriteFilterSorting,
         AccountsUsersUserSocialType,
+        AccountsUsersUserViewHistoryPeriod,
+        AccountsUsersUserViewHistoryStatus,
     )
     from anilibria_api_types.codegen.enums.anime import (
         AnimeReleasesReleaseAgeRating,
@@ -491,6 +493,8 @@ class AccountsMethod(BaseMethod):
         limit: int | None = None,
         include: str | list[str] | None = None,
         exclude: str | list[str] | None = None,
+        f_period: AccountsUsersUserViewHistoryPeriod | None = None,
+        f_status: AccountsUsersUserViewHistoryStatus | None = None,
     ) -> AccountsUsersMeViewsHistory:
         """
         История просмотренных эпизодов
@@ -498,6 +502,8 @@ class AccountsMethod(BaseMethod):
         :param limit: Ограничение на количество элементов
         :param include: Список включаемых полей. Через запятую или множественные параметры. Поддерживается вложенность через точку.
         :param exclude: Список исключаемых полей. Через запятую или множественные параметры. Поддерживается вложенность через точку. Приоритет над include
+        :param f_period: Период просмотра в UTC
+        :param f_status: Недосмотренные или досмотренные эпизоды
         """
         params = {
             k: v
@@ -506,6 +512,12 @@ class AccountsMethod(BaseMethod):
                 "limit": limit,
                 "include": include,
                 "exclude": exclude,
+                "f[period]": (
+                    f_period.value if f_period is not None else None
+                ),
+                "f[status]": (
+                    f_status.value if f_status is not None else None
+                ),
             }.items()
             if v is not None
         }
