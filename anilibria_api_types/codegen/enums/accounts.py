@@ -26,3 +26,15 @@ class AccountsUsersUserFavoriteFilterSorting(StrEnum):
     RATING_ASC = "RATING_ASC"
     YEAR_DESC = "YEAR_DESC"
     YEAR_ASC = "YEAR_ASC"
+
+
+class AccountsUsersUserViewHistoryPeriod(StrEnum):
+    TODAY = "today"
+    YESTERDAY = "yesterday"
+    WEEK = "week"
+    MONTH = "month"
+
+
+class AccountsUsersUserViewHistoryStatus(StrEnum):
+    UNWATCHED = "unwatched"
+    WATCHED = "watched"

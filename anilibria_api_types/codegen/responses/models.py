@@ -207,7 +207,7 @@ class AccountsUsersMeFavoritesReleasesItem(AnimeReleasesV1Release):
 
 class AccountsUsersMeViewsHistory(BaseModel):
     data: list[AccountsUsersMeViewsHistoryItem] | None = None
-    meta: UtilsPaginationSchemesMeta | None = None
+    meta: AccountsUsersMeViewsHistoryMeta | None = None
 
 
 class AccountsUsersV1UserView(BaseModel):
@@ -248,6 +248,19 @@ class AccountsUsersMeViewsHistoryItemReleaseEpisode(
     AnimeReleasesV1ReleaseEpisode
 ):
     release: AnimeReleasesV1Release | None = None
+
+
+class AccountsUsersMeViewsHistoryMeta(UtilsPaginationSchemesMeta):
+    counts: AccountsUsersMeViewsHistoryMetaCounts | None = None
+
+
+class AccountsUsersMeViewsHistoryMetaCounts(BaseModel):
+    today: int | None = None
+    yesterday: int | None = None
+    week: int | None = None
+    month: int | None = None
+    unwatched: int | None = None
+    watched: int | None = None
 
 
 class AccountsUsersAuthLogin(BaseModel):
@@ -954,6 +967,8 @@ AccountsUsersV1UserView.model_rebuild()
 AccountsUsersMeViewsHistoryItem.model_rebuild()
 AnimeReleasesV1ReleaseEpisode.model_rebuild()
 AccountsUsersMeViewsHistoryItemReleaseEpisode.model_rebuild()
+AccountsUsersMeViewsHistoryMeta.model_rebuild()
+AccountsUsersMeViewsHistoryMetaCounts.model_rebuild()
 AccountsUsersAuthLogin.model_rebuild()
 AccountsUsersAuthSocialAuthenticate.model_rebuild()
 AccountsUsersAuthSocialLogin.model_rebuild()
