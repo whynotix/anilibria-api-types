@@ -23,7 +23,6 @@ from anilibria_api_types.codegen.responses.models import (
     AnimeGenresReleases,
     AnimeReleasesEpisode,
     AnimeReleasesEpisodeTimecode,
-    AnimeReleasesLatest,
     AnimeReleasesList,
     AnimeReleasesRandom,
     AnimeReleasesRecommended,
@@ -530,12 +529,14 @@ class AnimeMethod(BaseMethod):
 
     async def releases_latest(
         self,
+        page: int | None = None,
         limit: int | None = None,
         include: str | list[str] | None = None,
         exclude: str | list[str] | None = None,
-    ) -> AnimeReleasesLatest:
+    ):
         """
         Последние релизы
+        :param page: Номер страницы: с ним ответ постраничный (data + meta)
         :param limit: Количество последних релизов в выдаче
         :param include: Список включаемых полей. Через запятую или множественные параметры. Поддерживается вложенность через точку.
         :param exclude: Список исключаемых полей. Через запятую или множественные параметры. Поддерживается вложенность через точку. Приоритет над include
@@ -543,14 +544,14 @@ class AnimeMethod(BaseMethod):
         params = {
             k: v
             for k, v in {
+                "page": page,
                 "limit": limit,
                 "include": include,
                 "exclude": exclude,
             }.items()
             if v is not None
         }
-        response = await self.api.get("/anime/releases/latest", params=params)
-        return AnimeReleasesLatest.model_validate(response)
+        return await self.api.get("/anime/releases/latest", params=params)
 
     async def releases_list(
         self,
