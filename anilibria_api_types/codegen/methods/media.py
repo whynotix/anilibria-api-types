@@ -4,7 +4,6 @@ from __future__ import annotations
 from anilibria_api_types.codegen.responses.models import (
     AdsVasts,
     MediaPromotions,
-    MediaVideos,
 )
 from anilibria_api_types.methods.base_method import BaseMethod
 
@@ -47,12 +46,14 @@ class MediaMethod(BaseMethod):
 
     async def videos(
         self,
+        page: int | None = None,
         limit: int | None = None,
         include: str | list[str] | None = None,
         exclude: str | list[str] | None = None,
-    ) -> MediaVideos:
+    ):
         """
         Список видео-роликов
+        :param page: Номер страницы: с ним ответ постраничный (data + meta)
         :param limit: Количество роликов в выдаче
         :param include: Список включаемых полей. Через запятую или множественные параметры. Поддерживается вложенность через точку.
         :param exclude: Список исключаемых полей. Через запятую или множественные параметры. Поддерживается вложенность через точку. Приоритет над include
@@ -60,11 +61,11 @@ class MediaMethod(BaseMethod):
         params = {
             k: v
             for k, v in {
+                "page": page,
                 "limit": limit,
                 "include": include,
                 "exclude": exclude,
             }.items()
             if v is not None
         }
-        response = await self.api.get("/media/videos", params=params)
-        return MediaVideos.model_validate(response)
+        return await self.api.get("/media/videos", params=params)
