@@ -566,13 +566,18 @@ class AnimeReleasesRecommendedItem(AnimeReleasesV1Release):
     genres: list[AnimeGenresV1Genre] | None = None
 
 
-class AnimeReleasesLatest(RootModel):
-    root: list[AnimeReleasesLatestItem]
-
-
-class AnimeReleasesLatestItem(AnimeReleasesV1Release):
+class AnimeReleasesLatestRelease(AnimeReleasesV1Release):
     genres: list[AnimeGenresV1Genre] | None = None
     latest_episode: AnimeReleasesV1ReleaseEpisode | None = None
+
+
+class AnimeReleasesLatest(RootModel):
+    root: list[AnimeReleasesLatestRelease]
+
+
+class AnimeReleasesLatestPaginated(BaseModel):
+    data: list[AnimeReleasesLatestRelease] | None = None
+    meta: UtilsPaginationSchemesMeta | None = None
 
 
 class AnimeReleasesList(BaseModel):
@@ -850,10 +855,6 @@ class MediaPromotionsV1Promotion(BaseModel):
     has_overlay: bool | None = None
 
 
-class MediaVideos(BaseModel):
-    data: list[MediaVideosItem] | None = None
-
-
 class MediaVideosV1VideoContent(BaseModel):
     id: int | None = None
     url: str | None = None
@@ -867,8 +868,17 @@ class MediaVideosV1VideoContent(BaseModel):
     is_announce: bool | None = None
 
 
-class MediaVideosItem(MediaVideosV1VideoContent):
+class MediaVideosVideo(MediaVideosV1VideoContent):
     origin: MediaVideosV1VideoOrigin | None = None
+
+
+class MediaVideos(RootModel):
+    root: list[MediaVideosVideo]
+
+
+class MediaVideosPaginated(BaseModel):
+    data: list[MediaVideosVideo] | None = None
+    meta: UtilsPaginationSchemesMeta | None = None
 
 
 class MediaVideosV1VideoOriginType(BaseModel):
@@ -1027,8 +1037,9 @@ AnimeReleasesRandom.model_rebuild()
 AnimeReleasesRandomItem.model_rebuild()
 AnimeReleasesRecommended.model_rebuild()
 AnimeReleasesRecommendedItem.model_rebuild()
+AnimeReleasesLatestRelease.model_rebuild()
 AnimeReleasesLatest.model_rebuild()
-AnimeReleasesLatestItem.model_rebuild()
+AnimeReleasesLatestPaginated.model_rebuild()
 AnimeReleasesList.model_rebuild()
 AnimeReleasesListItem.model_rebuild()
 AnimeReleasesRelease.model_rebuild()
@@ -1075,9 +1086,10 @@ AppStatus.model_rebuild()
 AppStatusRequest.model_rebuild()
 MediaPromotions.model_rebuild()
 MediaPromotionsV1Promotion.model_rebuild()
-MediaVideos.model_rebuild()
 MediaVideosV1VideoContent.model_rebuild()
-MediaVideosItem.model_rebuild()
+MediaVideosVideo.model_rebuild()
+MediaVideos.model_rebuild()
+MediaVideosPaginated.model_rebuild()
 MediaVideosV1VideoOriginType.model_rebuild()
 MediaVideosV1VideoOrigin.model_rebuild()
 Teams.model_rebuild()
